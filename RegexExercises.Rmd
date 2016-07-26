@@ -1,0 +1,296 @@
+---
+title: "RegexExercises"
+output: html_document
+---
+
+##Exercises
+
+
+1. Find a pattern that matches the following rows:
+
+abcdefg
+
+abcde
+
+abc
+
+```{r, echo=FALSE}
+a <- c("abcdefg","abcde","abc")
+```
+
+
+
+2. Write a pattern that matches all the digits in the strings. Anywhere within the string:
+
+abc123xyz	
+
+define "123"	To be completed
+
+var g = 123;
+
+```{r, echo=FALSE}
+b <- c("abc123xyz","define 123","abcvar g = 123;")
+```
+
+
+
+3. Write a pattern that matches the first three strings, but not the last. 
+
+cat.
+
+896.	
+
+?=+.	
+
+abc1
+```{r, echo=FALSE}
+c <- c("cat.","896.","?=+.","abc1")
+```
+
+
+
+4. Match the first three strings, but not the last three strings
+
+can
+
+man
+
+fan
+
+dan
+
+ran
+
+pan
+
+```{r, echo=FALSE}
+d <- c("can","man","fan","dan", "ran", "pan")
+```
+
+
+
+5.Use the bracket notation to match the first three lines (all them have a pattern)
+
+Ana
+
+Bob
+
+Cpc
+
+aax
+
+bby
+
+ccz
+
+```{r, echo=FALSE}
+e <- c("Ana","Bob","Cpc","aax", "bby", "ccz")
+```
+
+
+
+6. Try writing a pattern that matches only the first two spellings
+
+wazzzzzup
+
+wazzzup
+
+wazup
+
+```{r, echo=FALSE}
+f <- c("wazzzzzup","wazzzup","wazup")
+```
+
+
+7. Skip the last string
+
+aaaabcc
+
+aabbbbc
+
+aacc
+
+a
+
+```{r, echo=FALSE}
+g <- c("aaaabcc","aabbbbc","aacc","a")
+```
+
+
+8. Notice how the plurality of the word "file" depends on the number of files found. Try writing a pattern to match only the lines where one or more files were found
+
+1 file found
+
+2 files found
+
+24 files found
+
+No files found
+
+```{r, echo=FALSE}
+h <- c("1 file found","2 files found","24 files found","No files found")
+```
+
+
+9. Try writing a pattern that can match each line regardless of how much whitespace is between the number and the content
+
+ abc
+
+    abc
+
+       abc
+
+abc
+
+```{r, echo=FALSE}
+i <- c("1. abc","2.  abc","3.    abc","4.abc")
+```
+
+
+
+10. Match the line where only the word successful appears
+
+Mission: successful
+
+Last Mission: unsuccessful
+
+Next Mission: successful upon capture of targe
+
+```{r, echo=FALSE}
+j <- c("Mission: successful","Last Mission: unsuccessful","Next Mission: successful upon capture of target")
+```
+
+
+11. Write a regular expression that matches only the filenames (not including extension) of the PDF's below
+
+file_record_transcript.pdf
+
+file_0724249.pdf
+
+testfile_fake.pdf.tmp
+
+```{r, echo=FALSE}
+k <- c("file_record_transcript.pdf","file_0724249.pdf","testfile_fake.pdf.tmp")
+```
+
+
+12.Write an expression that matches and captures both the full date, as well as the year of the date
+
+Jan 1987
+
+May 1969
+
+Aug 2011
+
+```{r, echo=FALSE}
+l <- c("Jan 1987","May 1969","Aug 2011")
+```
+
+
+13. Try to capture the width and height of each display
+
+1289x720
+
+1920x1600
+
+1024x768
+
+```{r, echo=FALSE}
+m <- c("1289x720","1920x1600","1024x768")
+```
+
+
+14. Write a conditional pattern that matches only the lines with small fuzzy createrues below
+
+I love cats
+
+I love dogs
+
+I love logs
+
+I love cogs
+
+```{r, echo=FALSE}
+n <- c("I love cats","I love dogs","I love logs","I love cogs")
+```
+
+
+##Answers
+
+ Question 1
+```{r}
+grep("[a-z]",a, ignore.case=TRUE)
+```
+
+Question 2
+```{r}
+grep("[0-9]",b)
+#or
+grep("\\d",b)
+```
+
+Question 3
+```{r}
+grep("^.*\\.$",c, ignore.case=TRUE)
+```
+
+Question 4 
+```{r}
+grep("[^drp]an",d, ignore.case=TRUE)
+```
+
+Question 5
+```{r}
+grep("[A-Z][a-z][a-z]",e)
+```
+
+Question 6
+```{r}
+grep("z{2,}",f)
+#or
+grep("waz{3,5}up",f)
+```
+
+Question 7 
+```{r}
+grep("aa+b*c+",g)
+#or
+grep("a{2,4}b{0,4}c{1,2}",g)
+```
+
+Question 8
+```{r}
+grep("[0-9]+\\sfiles?\\sfound?",h)
+#or
+grep("\\d+ files? found?",h)
+```
+
+Question 9 
+```{r}
+grep("\\s+",i)
+```
+
+Question 10
+```{r}
+grep("[^un]successful$",j)
+```
+
+Question 11
+```{r}
+grep("^(file.+)(.pdf)$",k)
+```
+
+Question 12 
+```{r}
+grep("(\\w+\\s+(\\d+))",l)
+```
+
+Question 13 
+```{r}
+grep("(\\d+)x(\\d+)",m)
+```
+
+Question 14
+```{r}
+grep("I love (cats|dogs)",n)
+```
