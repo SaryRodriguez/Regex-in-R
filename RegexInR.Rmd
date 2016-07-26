@@ -1,0 +1,454 @@
+---
+title: "Regex in R"
+output: html_document
+---
+
+##Introduction
+
+Whenever you want to extract information from text, regular expressions are extremely useful. 
+R has some functions to write patterns to match specific sequence of characters. 
+
+
+Using Regex functions, we can:
+
+1. Search matches
+
+2. Extract parts of a string
+
+3. Find and replace characters
+
+
+##1. Search matches 
+
+
+In R, exist some functions to search patters in text strings
+
+- grep: returns a vector of the indices of the elements of x that yielded a match
+
+- grepl: returns a logical vector of the indices of the elements of x that yielded a match
+
+- regexpr: returns an integer vector of the same length as text giving the starting position of the first match  or -1 if there is none, with attribute "match.length", an integer vector giving the length of the matched text (or -1 for no match)
+
+
+We are going to use the following vector containing text in order to show some examples of Regex usage:
+
+```{r}
+#put words in a vector to practice some Regex
+x <- c("16_24cat", "25_34cat", "35_44catch", "45_54Cat", "55_104fat","cat_98","78_cat","hello.txt", "The", "licenses", "for", "most", "software", "are",   "designed", "to", "take", "away", "your", "freedom",   "to", "share", "and", "change", "it.",    "", "By", "contrast,", "the", "GNU", "General", "Public", "License", "is", "intended", "to", "guarantee", "your", "freedom", "to",
+   "share", "and", "change", "free", "software", "--", "to", "make", "sure", "the", "software", "is", "free", "for", "all", "its", "users", "english muffin", "Sara.txt", "IMG23.png", "panchita45@hotmail.com")
+```
+
+
+
+#### Select all the items in strings containing a word (case sensitive)
+
+We want to find match all the words containing the word "cat"
+```{r}
+grep(pattern = "cat", x = x)
+```
+
+#### Select all the items containing a word at the end of a string (not case sensitive)(greedy)
+
+Match all the words that contain the word "cat" at the end of the string
+```{r}
+grep("cat$", x, ignore.case = T)
+```
+
+### Select all the items containing a word at the beginning of a string (case sensitive)
+
+Match all the words that contain the word "cat" at the beginning of the string
+```{r}
+grep("^[cat].*", x)
+```
+
+### Select specific file extension
+
+Sometimes we just need to extract the documents with certain file extensions. E.g. .txt, .pdf or .ppt files. In this case, we will match all the .txt files
+```{r}
+grep("^.*\\.txt$", x)    
+```
+
+We can select the full name of a file
+```{r}
+grep("^(IMG\\d+\\.png)$", x)
+```
+
+Or just capture and extract the file name without the extension (Capture the part before the period)
+```{r}
+grep("^(IMG\\d+)\\.png$", x)
+```
+
+
+
+
+##2. Extract parts of a string
+
+
+The function *strstring* helps to split the elements of a character vector into substrings according the matches we want to find. 
+
+####Select all the characters eliminating certain symbol 
+
+In this example, we elmininate the symbol "_" and extract the words left
+
+```{r}
+strsplit(x, split = "_")
+```
+
+
+
+##3. Find and replace
+
+The most used expresions to find a pattern and replace it with something are:
+
+- sub
+- gsub
+
+We want all instances of two numbers followed by an alphabet letter to have an additional character
+inserted, but only if the first of those numbers is 3 or less (case sensitive)
+```{r}
+gsub("([1-3][1-9][a-z])", "m\\1", x, perl = T)
+#[1-3] numbers of 3 or less
+#[1-9] instances of numbers
+#[a-z] followed by an alphabet letter
+#\\1 replace with the value captured in group 1
+#m add "m" in the pattern
+```
+
+
+
+## Cheatcode
+
+
+| Syntax     | Description                                           |
+|----------- |-------------------------------------------------------|
+| \\d        | Digit 0:9                                             |
+| \\D        | Non Digit                                             |
+| \\s        | Space                                                 |
+| \\S        | Not Space                                             |
+| \\w        | Word                                                  |
+|[A-Za-z0-9_]| Word                                                  |
+| \\W        | Not Word                                              |
+| \\t        | Tab                                                   |
+|  \\n       | New Line                                              |
+| \\b        | Word Boundary                                         |
+| \\B        | Non-word Boundary                                     |
+| ^          | Beginning of String                                   |
+| $          | End of String                                         |
+|  |         | Alternation Match e.g.,/(i|o)n/ matches "in" and "on" |
+|  .         | Any character                                         |
+|  \\.       | Matches "." literally                                 |
+|  [ab]      | Matches a or b literally                              |
+|  [^ab]     | Any character except a and b                          |
+|  [0-9]     | All digit                                             |
+|  [A-Z]     | All uppercase A to Z letters                          |
+|  [a-z]     | All lowercase A to Z letters                          |
+|  +         | At least one time                                     |
+|  *         | Zero or more times                                    |
+|  ?         | Zero or one  times                                    |
+|  {n}       | Occurs n times                                        |
+| {n1,n2}    | Occurs n1-n2 times                                    |
+|{n1,n2}?    | non greedy match                                      |
+|  {n,}      | ocurrs >= n times                                     |
+|[:alnum:]   | Alphanumeric characters                               |
+|[:alpha:]   | Alphabetic characters                                 |
+|[:blank:]   | Blank characters                                      |
+|[:digit:]   | Digits 0:9                                            |
+|[:graph:]   | Graphical characters                                  |
+|[:punct:]   | Punctuation character                                 |
+|[:space:]   | Space characters                                      |
+|[:upper:]   | Upper-case letters                                    |
+|[:xdigit:]  | Hexadecimal digits                                    |
+
+
+
+##Exercises
+
+
+1. Find a pattern that matches the following rows:
+
+abcdefg
+
+abcde
+
+abc
+
+```{r, echo=FALSE}
+a <- c("abcdefg","abcde","abc")
+```
+
+
+
+2. Write a pattern that matches all the digits in the strings. Anywhere within the string:
+
+abc123xyz	
+
+define "123"	To be completed
+
+var g = 123;
+
+```{r, echo=FALSE}
+b <- c("abc123xyz","define 123","abcvar g = 123;")
+```
+
+
+
+3. Write a pattern that matches the first three strings, but not the last. 
+
+cat.
+
+896.	
+
+?=+.	
+
+abc1
+```{r, echo=FALSE}
+c <- c("cat.","896.","?=+.","abc1")
+```
+
+
+
+4. Match the first three strings, but not the last three strings
+
+can
+
+man
+
+fan
+
+dan
+
+ran
+
+pan
+
+```{r, echo=FALSE}
+d <- c("can","man","fan","dan", "ran", "pan")
+```
+
+
+
+5.Use the bracket notation to match the first three lines (all them have a pattern)
+
+Ana
+
+Bob
+
+Cpc
+
+aax
+
+bby
+
+ccz
+
+```{r, echo=FALSE}
+e <- c("Ana","Bob","Cpc","aax", "bby", "ccz")
+```
+
+
+
+6. Try writing a pattern that matches only the first two spellings
+
+wazzzzzup
+
+wazzzup
+
+wazup
+
+```{r, echo=FALSE}
+f <- c("wazzzzzup","wazzzup","wazup")
+```
+
+
+7. Skip the last string
+
+aaaabcc
+
+aabbbbc
+
+aacc
+
+a
+
+```{r, echo=FALSE}
+g <- c("aaaabcc","aabbbbc","aacc","a")
+```
+
+
+8. Notice how the plurality of the word "file" depends on the number of files found. Try writing a pattern to match only the lines where one or more files were found
+
+1 file found
+
+2 files found
+
+24 files found
+
+No files found
+
+```{r, echo=FALSE}
+h <- c("1 file found","2 files found","24 files found","No files found")
+```
+
+
+9. Try writing a pattern that can match each line regardless of how much whitespace is between the number and the content
+
+ abc
+
+    abc
+
+       abc
+
+abc
+
+```{r, echo=FALSE}
+i <- c("1. abc","2.  abc","3.    abc","4.abc")
+```
+
+
+
+10. Match the line where only the word successful appears
+
+Mission: successful
+
+Last Mission: unsuccessful
+
+Next Mission: successful upon capture of targe
+
+```{r, echo=FALSE}
+j <- c("Mission: successful","Last Mission: unsuccessful","Next Mission: successful upon capture of target")
+```
+
+
+11. Write a regular expression that matches only the filenames (not including extension) of the PDF's below
+
+file_record_transcript.pdf
+
+file_0724249.pdf
+
+testfile_fake.pdf.tmp
+
+```{r, echo=FALSE}
+k <- c("file_record_transcript.pdf","file_0724249.pdf","testfile_fake.pdf.tmp")
+```
+
+
+12.Write an expression that matches and captures both the full date, as well as the year of the date
+
+Jan 1987
+
+May 1969
+
+Aug 2011
+
+```{r, echo=FALSE}
+l <- c("Jan 1987","May 1969","Aug 2011")
+```
+
+
+13. Try to capture the width and height of each display
+
+1289x720
+
+1920x1600
+
+1024x768
+
+```{r, echo=FALSE}
+m <- c("1289x720","1920x1600","1024x768")
+```
+
+
+14. Write a conditional pattern that matches only the lines with small fuzzy createrues below
+
+I love cats
+
+I love dogs
+
+I love logs
+
+I love cogs
+
+```{r, echo=FALSE}
+n <- c("I love cats","I love dogs","I love logs","I love cogs")
+```
+
+
+##Answers
+
+1. 
+```{r}
+grep("[a-z]",a, ignore.case=TRUE)
+```
+
+2. 
+```{r}
+grep("[0-9]",b)
+#or
+grep("\\d",b)
+```
+
+3. 
+```{r}
+grep("^.*\\.$",c, ignore.case=TRUE)
+```
+
+4. 
+```{r}
+grep("[^drp]an",d, ignore.case=TRUE)
+```
+
+5. 
+```{r}
+grep("[A-Z][a-z][a-z]",e)
+```
+
+6. 
+```{r}
+grep("z{2,}",f)
+#or
+grep("waz{3,5}up",f)
+```
+
+7. 
+```{r}
+grep("aa+b*c+",g)
+#or
+grep("a{2,4}b{0,4}c{1,2}",g)
+```
+
+8. 
+```{r}
+grep("[0-9]+\\sfiles?\\sfound?",h)
+#or
+grep("\\d+ files? found?",h)
+```
+
+9. 
+```{r}
+grep("\\s+",i)
+```
+
+10. 
+```{r}
+grep("[^un]successful$",j)
+```
+
+11. 
+```{r}
+grep("^(file.+)(.pdf)$",k)
+```
+
+12. 
+```{r}
+grep("(\\w+\\s+(\\d+))",l)
+```
+
+13. 
+```{r}
+grep("(\\d+)x(\\d+)",m)
+```
+
+14.
+```{r}
+grep("I love (cats|dogs)",n)
+```
